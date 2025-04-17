@@ -16,8 +16,9 @@ export async function addData(image, label) {
 
     try {
         const request = await fetch(`${host}:${port}/api/add-example`, requestOptions);
-        const text = await request.text();
-        console.log('Server response:', text);
+        const data = await request.json();
+        console.log('Server response:', data);
+        return data.labels;
     } catch (e) {
         console.log('Error: ',e.message);
     }
@@ -53,6 +54,21 @@ export async function hello() {
 
 }
 
-export async function predict() {
+export async function predict(image) {
+
+    const requestOptions = {
+        method: "POST",        
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ image })
+    }
+
+    try {
+        const request = await fetch(`${host}:${port}/api/predict`, requestOptions);
+        const text = await request.text();
+        console.log('Server response:', text);
+        return text;
+    } catch (e) {
+        console.log('Error: ',e.message);
+    }
 
 }
