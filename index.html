@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css">
+  <title>AlephBet Predictor</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.12.0"></script>
+</head>
+
+<body>
+  <h2>AlephBet Prediction</h2>
+  <canvas id="canvas" width="280" height="280"></canvas>
+  <input id="labelInput" value="">
+  <br>
+  <button id="helloBtn">Hello</button>
+  <button id="addBtn">Add to data</button>
+  <button id="trainBtn">Train model</button>
+  <button id="predictBtn">Predict</button>
+  <button id="clearBtn">Clear</button>
+  <p id="result"></p>
+
+  <script type="module">
+    import { clearCanvas } from './modules/canvasActions.js';
+    import { addData, trainModel, predict, hello } from './modules/fetchServer.js';
+
+    document.getElementById('helloBtn').addEventListener('click', hello);
+
+    document.getElementById('addBtn').addEventListener('click', () => {
+      const label = document.getElementById('labelInput').value;
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+    
+      const img = tf.browser.fromPixels(canvas, 1)
+        .resizeNearestNeighbor([28, 28])
+        .toFloat()
+        .div(255.0)
+        .squeeze();
+
+      img.array().then(array => {
+        addData(array, label);
+      });
+  
+  });    
+    
+    document.getElementById('trainBtn').addEventListener('click', trainModel);
+    document.getElementById('predictBtn').addEventListener('click', predict);
+    document.getElementById('clearBtn').addEventListener('click', clearCanvas);    
+
+  </script>
+</body>
+
+</html>
